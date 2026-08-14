@@ -1,0 +1,120 @@
+{
+  "info": {
+    "_postman_id": "a31b19c4-5a7b-45ce-9ea4-a0833e5519a1",
+    "name": "Confitería API",
+    "description": "Colección para probar el CRUD de categorías y productos. Ejecuta primero Crear categoría y luego Crear producto; los IDs se guardan automáticamente en las variables de colección.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Categorías",
+      "item": [
+        {
+          "name": "Crear categoría",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 201', function () { pm.response.to.have.status(201); });",
+                  "const category = pm.response.json();",
+                  "pm.collectionVariables.set('categoryId', category.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Pasteles\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/categories"
+          }
+        },
+        {
+          "name": "Listar categorías",
+          "request": { "method": "GET", "url": "{{baseUrl}}/categories" }
+        },
+        {
+          "name": "Obtener categoría por ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/categories/{{categoryId}}" }
+        },
+        {
+          "name": "Actualizar categoría",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Pasteles y tortas\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/categories/{{categoryId}}"
+          }
+        },
+        {
+          "name": "Eliminar categoría (ejecutar al final)",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/categories/{{categoryId}}" }
+        }
+      ]
+    },
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "Crear producto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 201', function () { pm.response.to.have.status(201); });",
+                  "const product = pm.response.json();",
+                  "pm.collectionVariables.set('productId', product.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Torta de chocolate\",\n  \"description\": \"Torta artesanal de chocolate\",\n  \"price\": 45.5,\n  \"stock\": 10,\n  \"categoryId\": \"{{categoryId}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/products"
+          }
+        },
+        {
+          "name": "Listar productos",
+          "request": { "method": "GET", "url": "{{baseUrl}}/products" }
+        },
+        {
+          "name": "Obtener producto por ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/products/{{productId}}" }
+        },
+        {
+          "name": "Actualizar producto",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 50,\n  \"stock\": 8\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Eliminar producto",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/products/{{productId}}" }
+        }
+      ]
+    }
+  ]
+}
