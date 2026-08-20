@@ -1,4 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { S3Service } from "infrastructure/aws/s3/s3.service";
 import { CreateProductDto } from "src/products/application/dto/create-product.dto";
 import { UpdateProductDto } from "src/products/application/dto/update-product.dto";
 import { CreateProductUseCase } from "src/products/application/use-cases/create-product-use-case";
@@ -15,6 +17,7 @@ export class ProductController {
         private readonly getProductById: FindByIdProductUseCase,
         private readonly updateProduct: UpdateProductUseCase,
         private readonly deleteProduct: DeleteProductUseCase,
+        private readonly s3Service: S3Service
     ) {}
 
     @Post()
@@ -41,7 +44,19 @@ export class ProductController {
     remove(@Param('id') id: string) {
         return this.deleteProduct.execute(id);
     }
-  }
+
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadImage(@UploadedFile() file: any) {
+    const key = `products/${file.originalname}`;
+
+    return this.s3Service.uploadFile(
+        file.buffer,
+        key,
+        file.mimetype,
+    );
+        }
+}
 
 
 

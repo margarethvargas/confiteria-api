@@ -10,11 +10,13 @@ import { DeleteProductUseCase } from './application/use-cases/delete-product-use
 import { FindByIdProductUseCase } from './application/use-cases/get-all-by-id-product-use-case';
 import { UpdateProductUseCase } from './application/use-cases/update-product-use-case';
 import { CategoriesModule } from 'src/category/category.module';
+import { S3Module } from 'infrastructure/aws/s3/s3.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProductEntity]),
     CategoriesModule,
+    S3Module
 ],
   controllers: [
     ProductController
